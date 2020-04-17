@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Jutsu } from "react-jutsu";
+import React, { useState, useEffect } from "react";
+import { initConference } from "./init.js";
 
 const App = () => {
   const [room, setRoom] = useState("");
@@ -12,14 +12,11 @@ const App = () => {
     if (room && name) setCall(true);
   };
 
-  return call ? (
-    <Jutsu
-      roomName={room}
-      userName={name}
-      password={password}
-      loadingComponent={<p>loading ...</p>}
-    />
-  ) : (
+  useEffect(() => {
+    initConference();
+  }, []);
+
+  return (
     <form>
       <input
         id="room"
