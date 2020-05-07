@@ -1,26 +1,29 @@
-import React, { useState, useEffect } from "react";
-import { initConference } from "./init.js";
+import React, { useState } from "react";
+import Connection from "./connection";
 import Video from "./video.js";
+import Audio from "./audio.js";
 
 const App = () => {
-  const [room, setRoom] = useState("");
-  const [name, setName] = useState("");
-  const [call, setCall] = useState(false);
-  const [password, setPassword] = useState("");
-  const [videos, setVideos] = useState(null);
+  const [room, setRoom] = useState("myrandomtest");
+  const [name, setName] = useState("Jon");
+  const [videos, setVideos] = useState([]);
+
+  const addVideo = (track, type) => {
+    const id = videos.length;
+    const newVid = <Video track={track} key={id} />;
+    setVideos(videos.concat([newVid]));
+  };
+
+  const addAudio = (track, type) => {
+    const id = videos.length;
+    const newVid = <Audio track={track} key={id} />;
+    setVideos(videos.concat([newVid]));
+  };
 
   const handleClick = (event) => {
     event.preventDefault();
-    if (room && name) setCall(true);
+    if (room && name) Connection(room, name, addVideo, addAudio);
   };
-
-  useEffect(() => {
-    const addVideo = (track) => {
-      // const newVid = <Video track={track} />;
-      setVideos(track);
-    };
-    initConference(addVideo);
-  }, []);
 
   return (
     <>
@@ -39,18 +42,11 @@ const App = () => {
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
-        <input
-          id="password"
-          type="text"
-          placeholder="Password (optional)"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
         <button onClick={handleClick} type="submit">
-          Start / Join
+          GO
         </button>
       </form>
-      <Video track={videos}></Video>
+      {videos}
     </>
   );
 };
